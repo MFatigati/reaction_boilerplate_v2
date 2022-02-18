@@ -1,31 +1,10 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from "react-router-dom";
-import apiClient from "../../lib/ApiClient.js";
-import { getBoard } from "../../actions/BoardActions.js";
-
+import React from "react";
 const SingleBoard = () => {
-  const dispatch = useDispatch();
-  const boards = useSelector(state => state.boards)
-  const lists = useSelector(state => state.lists)
-  const id = useParams().id
-
-  useEffect(() => {
-    dispatch(getBoard(id))
-  }, [dispatch]);
-
-  let currentBoard = boards.filter(board => {
-    return board._id === id;
-  })[0]
-
-  if (!currentBoard) {
-    return null
-  }
   return (
     <>
-      <header>
+       <header>
         <ul>
-          <li id="title">{currentBoard.title}</li>
+          <li id="title">My Title</li>
           <li className="star-icon icon"></li>
           <li className="private private-icon icon">Private</li>
         </ul>
@@ -36,7 +15,6 @@ const SingleBoard = () => {
           <i className="sub-icon sm-icon"></i>Subscribed
         </div>
       </header>
-      
       <main>
         <div id="list-container" className="list-container">
           <div id="existing-lists" className="existing-lists">

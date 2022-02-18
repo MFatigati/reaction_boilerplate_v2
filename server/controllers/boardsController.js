@@ -1,4 +1,7 @@
 const Board = require("../models/board");
+require("../models/list");
+require("../models/card");
+const Card = require("../models/card");
 const HttpError = require("../models/httpError");
 const { validationResult } = require("express-validator");
 
@@ -27,5 +30,23 @@ const createBoard = (req, res, next) => {
   }
 };
 
+const getBoardById = (req, res, next) => {
+  let id = req.params.id
+  Board.
+    findById(id).
+    populate({
+      path: 'lists',
+      populate: { path: 'cards' }
+    }).
+    then(response => {
+      res.json(response)
+    }).
+    catch(err => {
+      console.log(err);
+      next(new HttpError("No such board", 404))
+    })
+}
+
 exports.getBoards = getBoards;
 exports.createBoard = createBoard;
+exports.getBoardById = getBoardById;
