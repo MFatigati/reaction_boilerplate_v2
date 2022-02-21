@@ -6,7 +6,6 @@ export default function cards(state = [], action) {
         const { cards } = listItem;
         return acc.concat(cards);
       }, []);
-      console.log(justCards)
       return justCards;
     }
     default:
