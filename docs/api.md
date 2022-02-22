@@ -191,9 +191,7 @@ If the board doesn’t exist an error will be returned with a 404 status code.
 
 Creates a list.
 
-### 1.6.1. Expected Payload
-
-NOTE: The `boardId` where the list will reside is required.
+### 1.6.1. Expected PayloadNOTE: The `boardId` where the list will reside is required.
 
 ```json
 {

@@ -3,17 +3,34 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
 import apiClient from "../../lib/ApiClient.js";
 import { getBoard } from "../../actions/BoardActions.js";
+import { createList } from "../../actions/ListActions.js";
 import SingleList from "./SingleList"
+import { useState } from "react";
 
 const SingleBoard = () => {
   const dispatch = useDispatch();
   const boards = useSelector(state => state.boards)
   const lists = useSelector(state => state.lists)
   const id = useParams().id
+  const [isDisplayed, setIsDisplayed] = useState(false);
+  const [newListTitle, setNewListTitle] = useState("");
+
 
   useEffect(() => {
     dispatch(getBoard(id))
   }, [dispatch]);
+
+  function toggleAddList() {
+    setIsDisplayed(!isDisplayed);
+    setNewListTitle("");
+  }
+
+  function handleCreateNewList(e) {
+    if (newListTitle.trim() !== "") {
+      dispatch(createList(newListTitle, id))
+      toggleAddList();
+    }
+  }
 
   let currentBoard = boards.filter(board => {
     return board._id === id;
@@ -47,14 +64,16 @@ const SingleBoard = () => {
             })}
 
           </div>
-          <div id="new-list" className="new-list">
-            <span>Add a list...</span>
-            <input type="text" placeholder="Add a list..." />
+
+          <div id="new-list" className={`new-list ${isDisplayed ? "selected" : null}`}>
+            <span onClick={toggleAddList}>Add a list...</span>
+            <input type="text" placeholder="Add a list..." value={newListTitle} onChange={(e) => setNewListTitle(e.target.value)} />
             <div>
-              <input type="submit" className="button" value="Save" />
-              <i className="x-icon icon"></i>
+              <input type="submit" className="button" value="Save" onClick={handleCreateNewList} />
+              <i onClick={toggleAddList} className="x-icon icon"></i>
             </div>
           </div>
+
         </div>
       </main>
       <div className="menu-sidebar">

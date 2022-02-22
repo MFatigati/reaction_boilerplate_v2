@@ -18,6 +18,7 @@ const createBoard = (req, res, next) => {
   if (errors.isEmpty()) {
     Board.create(req.body.board)
       .then((board) => {
+        // FIXME: Find is not needed here since the board is already returned
         Board.find({ _id: board._id }, "title _id createdAt updatedAt").then(
           (board) => res.json({ board })
         );
@@ -31,22 +32,28 @@ const createBoard = (req, res, next) => {
 };
 
 const getBoardById = (req, res, next) => {
-  let id = req.params.id
+  let id = req.params.id || req.body.boardId;
   Board.
     findById(id).
     populate({
       path: 'lists',
       populate: { path: 'cards' }
-    }).
-    then(response => {
-      res.json(response)
-    }).
-    catch(err => {
+    })
+    .then((mongoResponse) => {
+      res.locals.board = mongoResponse;
+      next();
+    })
+    .catch(err => {
       console.log(err);
       next(new HttpError("No such board", 404))
     })
 }
 
+const sendBoard = (req, res, next) => {
+  res.json(res.locals.board)
+}
+
 exports.getBoards = getBoards;
 exports.createBoard = createBoard;
 exports.getBoardById = getBoardById;
+exports.sendBoard = sendBoard;

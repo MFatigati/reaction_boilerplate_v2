@@ -11,6 +11,11 @@ export default function lists(state = [], action) {
 
       return listsWithoutCards;
     }
+    case "CREATE_LIST_SUCCESS": {
+      const list = action.list;
+      state = state.concat(list);
+      return state;
+    }
 
 
     default:
