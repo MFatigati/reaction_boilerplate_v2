@@ -46,6 +46,13 @@ const apiClient = {
       .then(unwrapData)
       .then(callback)
       .catch(logError)
+  },
+  updateList: function (listUpdates, callback) {
+    return axios
+      .put(routes.UPDATE_LIST + listUpdates.id, {title: listUpdates.title})
+      .then(unwrapData)
+      .then(callback)
+      .catch(logError)
   }
 };
 

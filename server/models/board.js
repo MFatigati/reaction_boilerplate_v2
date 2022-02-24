@@ -8,11 +8,11 @@ const BoardSchema = new Schema({
     required: [true, 'The Board title is required']
   },
   lists: [{
-    type: Schema.Types.ObjectId, 
+    type: Schema.Types.ObjectId,
     ref: "List"
   }]
 }, {
-  timestamps: { createdAt: true, updatedAt: false }
+  timestamps: true,
 })
 
 const Board = mongoose.model('Board', BoardSchema);

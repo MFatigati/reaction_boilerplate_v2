@@ -11,14 +11,14 @@ const ListSchema = new Schema({
     ref: "Board"
   },
   position: {
-    type: Number 
+    type: Number
   },
   cards: [{
-    type: Schema.Types.ObjectId, 
+    type: Schema.Types.ObjectId,
     ref: "Card"
   }],
 }, {
-  timestamps: { createdAt: true, updatedAt: false }
+  timestamps: true
 })
 
 const List = mongoose.model('List', ListSchema);

@@ -16,7 +16,15 @@ export default function lists(state = [], action) {
       state = state.concat(list);
       return state;
     }
-
+    case "UPDATE_LIST_SUCCESS": {
+      return state.map(list => {
+        if (list._id === action.list._id) {
+          return action.list;
+        } else {
+          return list;
+        }
+      })
+    }
 
     default:
       return state;

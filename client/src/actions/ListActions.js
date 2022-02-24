@@ -12,3 +12,15 @@ export function createList(title, id) {
     });
   };
 };
+
+export function updateListSuccess(listUpdates) {
+  return { type: types.UPDATE_LIST_SUCCESS, listUpdates };
+}
+
+export function updateList(listUpdates) {
+  return function (dispatch) {
+    apiClient.updateList(listUpdates, list => {
+      dispatch(updateListSuccess(list));
+    });
+  };
+};

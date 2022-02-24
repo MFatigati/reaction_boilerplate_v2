@@ -26,10 +26,41 @@ const CardSchema = new Schema({
   position: {
     type: Number
   },
-  commentCount: {
+  commentsCount: {
     type: Number,
-  }
+  },
+  actions: [{
+    type: String,
+  }],
+  completed: {
+    type: Boolean,
+  },
+  comments: [
+    {
+      type: String,
+    }
+  ],
+}, {
+  //timestamps: { createdAt: true, updatedAt: true }
+  timestamps: true
 })
+// {
+//   "_id": 9,
+//   "title": "My new card",
+//   "description": "",
+//   "labels": [],
+//   "listId": 13,
+//   "position": 65535.0,
+//   "archived": false,
+//   "createdAt": "2020-10-08T17:54:55.285Z",
+//   "updatedAt": "2020-10-08T17:54:55.285Z",
+//   "dueDate": null,
+//   "completed": false,
+//   "boardId": 1,
+//   "comments": [],
+//   "actions": []
+//   "commentsCount": 0
+// }
 
 const Card = mongoose.model('Card', CardSchema);
 
