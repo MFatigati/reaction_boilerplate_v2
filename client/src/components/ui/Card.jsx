@@ -1,18 +1,50 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams, useHistory } from "react-router-dom";
+import { getBoard } from "../../actions/BoardActions.js";
+import { getCard } from "../../actions/CardActions.js";
+
 const Card = () => {
+  const dispatch = useDispatch();
+  const cardId = useParams().id
+  const history = useHistory();
+  const [gotCard, setGotCard] = useState(false);
+  const cards = useSelector(state => state.cards)
+  const lists = useSelector(state => state.lists)
+  const currentCard = cards.filter(card => card._id === cardId)[0];
+  const currentList = lists.filter(list => list._id === currentCard.listId)[0];
+  console.log("current Card: ", currentCard);
+
+
+  useEffect(() => {
+    if (!gotCard && cards.length === 0) {
+      dispatch(getCard(cardId, () => setGotCard(true)));
+    } else {
+      dispatch(getBoard(currentCard.boardId))
+    }
+  }, [gotCard, dispatch]);
+
+  // if we have the card, then try to get the board
+  // have some sort of primitive to represent whether we have received the card
+  if (!currentCard || !currentList) {
+    return null
+  }
+
+  const dueDate = new Date(currentCard.dueDate);
+
   return (
     <div id="modal-container">
       <div className="screen"></div>
       <div id="modal">
-        <i className="x-icon icon close-modal"></i>
+        <i className="x-icon icon close-modal" onClick={() => history.goBack()}></i>
         <header>
           <i className="card-icon icon .close-modal"></i>
           <textarea className="list-title" style={{ height: "45px" }}>
-            Cards do many cool things. Click on this card to open it and learn
-            more...
+            {currentCard.title}
           </textarea>
           <p>
-            in list <a className="link">Stuff to try (this is a list)</a>
+            in list <a className="link">{currentList.title}</a>
             <i className="sub-icon sm-icon"></i>
           </p>
         </header>
@@ -22,24 +54,14 @@ const Card = () => {
               <ul className="modal-details-list">
                 <li className="labels-section">
                   <h3>Labels</h3>
-                  <div className="member-container">
-                    <div className="green label colorblindable"></div>
-                  </div>
-                  <div className="member-container">
-                    <div className="yellow label colorblindable"></div>
-                  </div>
-                  <div className="member-container">
-                    <div className="orange label colorblindable"></div>
-                  </div>
-                  <div className="member-container">
-                    <div className="blue label colorblindable"></div>
-                  </div>
-                  <div className="member-container">
-                    <div className="purple label colorblindable"></div>
-                  </div>
-                  <div className="member-container">
-                    <div className="red label colorblindable"></div>
-                  </div>
+                  {currentCard.labels.map(color => {
+                    return (
+                      <div className="member-container"  >
+                        <div className={`${color} label colorblindable`}></div>
+                      </div>
+                    )
+                  })}
+
                   <div className="member-container">
                     <i className="plus-icon sm-icon"></i>
                   </div>
@@ -53,7 +75,7 @@ const Card = () => {
                       className="checkbox"
                       checked=""
                     />
-                    Aug 4 at 10:42 AM <span>(past due)</span>
+                    {`${dueDate.getMonth()}/${dueDate.getDate()}/${dueDate.getFullYear()}`} <span>{dueDate < new Date() ? `(past due)` : null}</span>
                   </div>
                 </li>
               </ul>
@@ -63,7 +85,7 @@ const Card = () => {
                   Edit
                 </span>
                 <p className="textarea-overlay">
-                  Cards have a symbol to indicate if they contain a description.
+                  {currentCard.description}
                 </p>
                 <p id="description-edit-options" className="hidden">
                   You have unsaved edits on this field.{" "}
@@ -76,7 +98,7 @@ const Card = () => {
               <h2 className="comment-icon icon">Add Comment</h2>
               <div>
                 <div className="member-container">
-                  <div className="card-member">TP</div>
+                  <div className="card-member">Temp</div>
                 </div>
                 <div className="comment">
                   <label>
@@ -102,7 +124,7 @@ const Card = () => {
                 </div>
               </div>
             </li>
-            <li className="activity-section">
+            {/* <li className="activity-section">
               <h2 className="activity-icon icon">Activity</h2>
               <ul className="horiz-list">
                 <li className="not-implemented">Show Details</li>
@@ -112,7 +134,7 @@ const Card = () => {
                   <div className="member-container">
                     <div className="card-member">TP</div>
                   </div>
-                  <h3>Taylor Peat</h3>
+                  <h3>Brendan Leal</h3>
                   <div className="comment static-comment">
                     <span>The activities are not functional.</span>
                   </div>
@@ -186,7 +208,7 @@ const Card = () => {
                   </div>
                 </li>
               </ul>
-            </li>
+            </li> */}
           </ul>
         </section>
         <aside className="modal-buttons">

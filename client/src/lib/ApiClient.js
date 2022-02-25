@@ -49,7 +49,21 @@ const apiClient = {
   },
   updateList: function (listUpdates, callback) {
     return axios
-      .put(routes.UPDATE_LIST + listUpdates.id, {title: listUpdates.title})
+      .put(routes.UPDATE_LIST + listUpdates.id, { title: listUpdates.title })
+      .then(unwrapData)
+      .then(callback)
+      .catch(logError)
+  },
+  getCardById: function (cardId, callback) {
+    return axios
+      .get(routes.CARDS_URL + cardId)
+      .then(unwrapData)
+      .then(callback)
+      .catch(logError)
+  },
+  createCard: function (newCard, callback) {
+    return axios 
+      .post(routes.CARDS_URL, newCard)
       .then(unwrapData)
       .then(callback)
       .catch(logError)

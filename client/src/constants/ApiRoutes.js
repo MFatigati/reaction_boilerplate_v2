@@ -3,3 +3,4 @@ export const CREATE_BOARD_URL = "/api/boards";
 export const GET_BOARD_URL = "/api/boards/";
 export const CREATE_LIST = "/api/lists"
 export const UPDATE_LIST = "/api/list/"
+export const CARDS_URL = "/api/cards"

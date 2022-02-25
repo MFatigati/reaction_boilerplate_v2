@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import apiClient from "../../lib/ApiClient.js";
 import { getBoard } from "../../actions/BoardActions.js";
 import { createList } from "../../actions/ListActions.js";
@@ -8,17 +8,33 @@ import SingleList from "./SingleList"
 import { useState } from "react";
 
 const SingleBoard = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
   const boards = useSelector(state => state.boards)
   const lists = useSelector(state => state.lists)
-  const id = useParams().id
+  const cards = useSelector(state => state.cards)
   const [isDisplayed, setIsDisplayed] = useState(false);
   const [newListTitle, setNewListTitle] = useState("");
 
+  function getBoardId() {
+    if (location.pathname.includes("/boards")) {
+      return useParams().id
+    } else {
+      const currentCard = cards.filter(card => card._id === useParams().id)[0];
+      if (currentCard) {
+        return currentCard.boardId;
+      }
+      return null
+    }
+  }
+
+  const boardId = getBoardId()
 
   useEffect(() => {
-    dispatch(getBoard(id))
-  }, [dispatch]);
+    if (boardId) {
+      dispatch(getBoard(boardId))
+    }
+  }, [boardId, dispatch]);
 
   function toggleAddList() {
     setIsDisplayed(!isDisplayed);
@@ -33,7 +49,7 @@ const SingleBoard = () => {
   }
 
   let currentBoard = boards.filter(board => {
-    return board._id === id;
+    return board._id === boardId;
   })[0]
 
   if (!currentBoard) {
@@ -79,6 +95,7 @@ const SingleBoard = () => {
       <div className="menu-sidebar">
         <div id="menu-main" className="main slide">
           <i className="back-icon icon"></i>
+
           <i className="x-icon icon"></i>
           <h1>Menu</h1>
           <div className="menu-contents">

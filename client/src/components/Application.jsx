@@ -16,6 +16,7 @@ import SingleBoardUI from "./ExampleUI/SingleBoard";
 
 // Real ui imports
 import SingleBoard from "./ui/SingleBoard";
+import Card from "./ui/Card"
 
 const Application = () => {
   return (
@@ -36,7 +37,9 @@ const Application = () => {
       <Route path="/ui/labelsPopover" component={LabelsPopoverUI} />
       <Route path="/ui/moveCardPopover" component={MoveCardPopoverUI} />
       <Route path="/ui/singleBoard" component={SingleBoardUI} />
-      <Route path="/boards/:id" component={SingleBoard} />
+
+      <Route path="/(boards|card)/:id" component={SingleBoard} />
+      <Route path="/card/:id/" component={Card} />
     </div>
   );
 };

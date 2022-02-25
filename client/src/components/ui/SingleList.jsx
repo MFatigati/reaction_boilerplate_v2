@@ -5,14 +5,16 @@ import apiClient from "../../lib/ApiClient.js";
 import { getBoard } from "../../actions/BoardActions.js";
 import SingleCard from "./SingleCard.jsx";
 import { updateList } from "../../actions/ListActions";
+import { createCard } from "../../actions/CardActions";
 
 const SingleList = ({ title, listId }) => {
   const dispatch = useDispatch();
   const cards = useSelector(state => state.cards)
-  // const [showEdit, setShowEdit] = useState(false)
-  const [showInput, setShowInput] = useState(false)
   const [newTitle, setNewTitle] = useState(title)
   const [editingInProgress, setEditingInProgress] = useState(false)
+  const [isDisplayed, setIsDisplayed] = useState(false);
+  const [newCardTitle, setNewCardTitle] = useState("");
+  const [addCardInProgress, setAddCardInProgress] = useState(false)
 
   let currentCards = cards.filter(card => {
     return card.listId === listId;
@@ -24,6 +26,23 @@ const SingleList = ({ title, listId }) => {
       title: newTitle,
     }
     dispatch(updateList(listUpdates))
+  }
+
+  const handleNewCard = () => {
+    let newCard = 
+    {
+      "listId": listId,
+      "card": {
+        "title": newCardTitle
+      }
+    }
+    dispatch(createCard(newCard));
+    handleAddCardToggle();
+  }
+
+  const handleAddCardToggle = () => {
+    setAddCardInProgress(!addCardInProgress);
+    setNewCardTitle("");
   }
 
   // TODO: This is not the ideal way to edit the list title. Do better.
@@ -62,7 +81,7 @@ const SingleList = ({ title, listId }) => {
   }
 
   return (
-    <div className="list-wrapper">
+    <div className={`list-wrapper ${addCardInProgress ? "add-dropdown-active" : null}`}>
       <div className="list-background">
         <div className="list">
           <a className="more-icon sm-icon" href="#" ></a>
@@ -84,20 +103,26 @@ const SingleList = ({ title, listId }) => {
               )
             })}
           </div>
-
-          <div className="add-dropdown add-bottom">
+          {/* active-card */}
+          <div className={`add-dropdown add-bottom  ${addCardInProgress ? "active-card" : null}`}>
             <div className="card">
               <div className="card-info"></div>
-              <textarea name="add-card"></textarea>
+              <textarea
+                name="add-card"
+                value={newCardTitle}
+                onChange={(e) => setNewCardTitle(e.target.value)}
+              >
+              </textarea>
               <div className="members"></div>
             </div>
-            <a className="button">Add</a>
-            <i className="x-icon icon"></i>
+            <a className="button" onClick={handleNewCard}>Add</a>
+            <i className="x-icon icon" onClick={handleAddCardToggle}></i>
             <div className="add-options">
               <span>...</span>
             </div>
           </div>
-          <div className="add-card-toggle" data-position="bottom">
+
+          <div className="add-card-toggle" data-position="bottom" onClick={handleAddCardToggle}>
             Add a card...
           </div>
         </div>

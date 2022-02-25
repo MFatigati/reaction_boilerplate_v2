@@ -1,6 +1,10 @@
 import React from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const SingleCard = ({ card }) => {
+  const [currentCard, setCurrentCard] = useState(card);
+
   function populateCardIcons(card) {
     return (
       // TODO: Depending on the completion status of the card we need to 
@@ -15,20 +19,23 @@ const SingleCard = ({ card }) => {
 
   return (
     <div className="card-background">
-      <div className="card ">
-        <i className="edit-toggle edit-icon sm-icon"></i>
-        <div className="card-info">
-          {card.labels.map((label) => {
-            return (
-              <div key={label} className={`card-label ${label} colorblindable`}></div>
-            )
-          })}
-          <p>
-            {card.title}
-          </p>
+      <Link to={`/card/${card._id}`} >
+        <div className="card ">
+
+          <i className="edit-toggle edit-icon sm-icon"></i>
+          <div className="card-info">
+            {card.labels.map((label) => {
+              return (
+                <div key={label} className={`card-label ${label} colorblindable`}></div>
+              )
+            })}
+            <p>
+              {card.title}
+            </p>
+          </div>
+          {populateCardIcons(card)}
         </div>
-        {populateCardIcons(card)}
-      </div>
+      </Link>
     </div>
   )
 }
